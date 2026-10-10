@@ -1,0 +1,9 @@
+[project]
+name = "agent-evals"
+version = "0.1.0"
+description = "Eval system for a tool-using customer support agent"
+requires-python = ">=3.12"
+dependencies = ["litellm", "numpy", "scipy", "statsmodels", "pyyaml", "matplotlib", "pytest"]
+
+[tool.setuptools]
+packages = []
