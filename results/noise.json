@@ -1,0 +1,21 @@
+{
+  "run_a": "v0-a",
+  "run_b": "v0-b",
+  "n_outcomes": 200,
+  "flip_rate": {
+    "all": 0.14,
+    "dev": 0.1484375,
+    "holdout": 0.125
+  },
+  "success_a": {
+    "all": 0.425,
+    "dev": 0.46875,
+    "holdout": 0.3472222222222222
+  },
+  "success_b": {
+    "all": 0.445,
+    "dev": 0.4609375,
+    "holdout": 0.4166666666666667
+  },
+  "minimum_detectable_effect": 0.14
+}

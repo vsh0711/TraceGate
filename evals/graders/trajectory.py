@@ -1,11 +1,13 @@
 """Trajectory graders: tool selection, argument correctness, efficiency."""
 import json
+import threading
 from collections import Counter
 
 from env.tools import PARAMS, Env
 from evals.graders.common import tool_events
 
 _ENV = Env()
+_ENV_LOCK = threading.Lock()   # one SQLite connection is shared by all grader threads
 _TYPES = {"string": str, "number": (int, float)}
 
 
@@ -27,10 +29,11 @@ def _schema_ok(name, args) -> bool:
 
 
 def _entities_real(name, args) -> bool:
-    if "order_id" in args and _ENV.order_context(str(args["order_id"])) is None:
-        return False
-    if "customer_id" in args and not _ENV.customer_exists(str(args["customer_id"])):
-        return False
+    with _ENV_LOCK:
+        if "order_id" in args and _ENV.order_context(str(args["order_id"])) is None:
+            return False
+        if "customer_id" in args and not _ENV.customer_exists(str(args["customer_id"])):
+            return False
     return True
 
 
@@ -39,8 +42,14 @@ def grade_args(task, traj) -> dict:
     valid = sum(_schema_ok(e["name"], e["args"]) for e in calls)
     real = sum(_schema_ok(e["name"], e["args"]) and _entities_real(e["name"], e["args"]) for e in calls)
     # "Correct" = the call equals a reference call of the same tool (only tools that the reference uses).
+    def num(v):
+        try:
+            return round(float(v), 2)
+        except (TypeError, ValueError):
+            return v   # a malformed value stays as it is, and never matches a reference call
+
     def norm(a):
-        return json.dumps({k: (round(float(v), 2) if k == "amount" else v) for k, v in a.items()}, sort_keys=True)
+        return json.dumps({k: (num(v) if k == "amount" else v) for k, v in a.items()}, sort_keys=True, default=str)
     ref_args = {(c["name"], norm(c["args"])) for c in task["reference_calls"]}
     ref_tools = {c["name"] for c in task["reference_calls"]}
     scored = [e for e in calls if e["name"] in ref_tools and isinstance(e["args"], dict)]

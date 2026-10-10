@@ -44,6 +44,19 @@ def sample(runs: list[str], n: int, seed: int = 0):
     print(f"queued {len(picked)} dev trials:", dict(Counter(p["judge_split"] for p in picked)))
 
 
+def prefetch():
+    """Extract the atomic claims of every queued trial now, so that `annotate` needs no waiting. Calls are cached."""
+    queue = [json.loads(l) for l in QUEUE.read_text().splitlines()]
+    trajs = {}
+    for i, q in enumerate(queue, 1):
+        if q["run"] not in trajs:
+            trajs[q["run"]] = {(t["task_id"], t["trial"]): t for t in load_trajectories(q["run"])}
+        judge.extract_claims(final_answer(trajs[q["run"]][(q["task_id"], q["trial"])]))
+        if i % 25 == 0:
+            print(f"  extracted claims for {i}/{len(queue)} trials", flush=True)
+    print("done")
+
+
 def _show(task, traj):
     print("\n" + "=" * 78)
     print(f"{task['id']} trial {traj['trial']} | request: {task['input'][0]}")
@@ -100,8 +113,8 @@ def annotate():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["sample", "annotate"])
+    ap.add_argument("cmd", choices=["sample", "prefetch", "annotate"])
     ap.add_argument("--runs", nargs="+", default=["v0-a", "v0-b"])
     ap.add_argument("--n", type=int, default=150)
     a = ap.parse_args()
-    sample(a.runs, a.n) if a.cmd == "sample" else annotate()
+    {"sample": lambda: sample(a.runs, a.n), "prefetch": prefetch, "annotate": annotate}[a.cmd]()

@@ -9,6 +9,7 @@ from pathlib import Path
 
 import config
 from agent.loop import run_trial
+from agent.user import HARNESS_VERSION
 from agent.versions import VERSIONS
 from evals.tasks import load_tasks
 
@@ -40,7 +41,7 @@ def main(argv=None):
     tasks = load_tasks(a.split)[: a.limit]
     cfg = {"run_id": run_id, "version": a.version, "version_note": VERSIONS[a.version]["note"], "split": a.split,
            "trials": a.trials, "salt": a.salt, "model": config.AGENT_MODEL, "temperature": config.TEMPERATURE,
-           "max_steps": config.MAX_STEPS, "max_tokens": config.MAX_TOKENS, "n_tasks": len(tasks)}
+           "harness": HARNESS_VERSION, "max_steps": config.MAX_STEPS, "max_tokens": config.MAX_TOKENS, "n_tasks": len(tasks)}
     (d / "config.json").write_text(json.dumps(cfg, indent=2))
 
     path = d / "trajectories.jsonl"

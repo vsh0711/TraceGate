@@ -35,7 +35,7 @@ def compute(grades: list[dict]) -> dict:
                             if any(g["difficulty"] == d for g in grades)}
     out["grader_pass"] = {k: _rate(g[k]["pass"] for g in grades) for k in ("state", "answer", "policy")}
     out["policy_violation_rate"] = _rate(not g["policy"]["pass"] for g in grades)
-    out["policy_violations_by_rule"] = dict(Counter(v["rule"] for g in grades for v in g["policy"]["violations"]))
+    out["policy_violations_by_rule"] = dict(Counter(r for g in grades for r in {v["rule"] for v in g["policy"]["violations"]}))   # trials, not events
     # tools: precision / recall per tool and overall
     tp, fp, fn = Counter(), Counter(), Counter()
     for g in grades:
@@ -52,6 +52,7 @@ def compute(grades: list[dict]) -> dict:
     out["arg_correct_rate"] = sum(g["args"]["correct"] for g in grades) / scored if scored else 1.0
     out["steps_ratio"] = _rate(g["efficiency"]["ratio"] for g in grades)
     out["loop_rate"] = _rate(g["efficiency"]["loop"] for g in grades)
+    out["blocked_calls_per_trial"] = _rate(g.get("blocked_calls", 0) for g in grades)
     out["fabricated_entity_rate"] = _rate(g["fab_entity"]["fabricated"] for g in grades)
     out["fabricated_action_rate"] = _rate(g["fab_action"]["fabricated"] for g in grades)
     judged = [g for g in grades if "claims" in g]
@@ -143,6 +144,7 @@ def write_report(run_id: str):
               f"| Tool selection precision / recall | {pct(m['tool_precision'])} / {pct(m['tool_recall'])} |",
               f"| Args: schema-valid / real entities / correct | {pct(m['arg_schema_valid_rate'])} / {pct(m['arg_entities_real_rate'])} / {pct(m['arg_correct_rate'])} |",
               f"| Efficiency: steps / reference steps; loop rate | {m['steps_ratio']:.2f}; {pct(m['loop_rate'])} |",
+              f"| Guardrail blocks per trial | {m['blocked_calls_per_trial']:.2f} |",
               f"| Fabricated entity rate | {pct(m['fabricated_entity_rate'])} |",
               f"| Fabricated action rate | {pct(m['fabricated_action_rate'])} |"]
         if m.get("n_judged"):

@@ -1,0 +1,14 @@
+{
+ "primary": {
+  "skipped_identity_check": 8,
+  "gave_up_early": 14,
+  "skipped_order_lookup": 22,
+  "malformed_tool_call": 1
+ },
+ "secondary": {
+  "repeated_action": 2,
+  "wrong_tool_args": 4,
+  "fabricated_action": 4,
+  "hallucinated_fact": 4
+ }
+}

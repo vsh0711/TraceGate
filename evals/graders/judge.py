@@ -71,7 +71,8 @@ def grade_claims(task, traj, model: str | None = None) -> dict:
     uns = sum(c["label"] == "unsupported" for c in labeled)
     con = sum(c["label"] == "contradicted" for c in labeled)
     return {"n_claims": len(labeled), "unsupported": uns, "contradicted": con,
-            "hallucinated": (uns + con) > 0, "claims": labeled, "judge_version": config.JUDGE_PROMPT_VERSION}
+            "hallucinated": (uns + con) > 0, "claims": labeled, "judge_version": config.JUDGE_PROMPT_VERSION,
+            "judge_model": model or config.JUDGE_MODEL}
 
 
 def grade_refusal(task, traj, model: str | None = None) -> dict | None:

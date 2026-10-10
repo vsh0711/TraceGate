@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import re
 import threading
 import time
 from pathlib import Path
@@ -16,6 +17,18 @@ CACHE_DIR = Path(".cache/llm")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 _lock = threading.Lock()
 _last_call = {}
+
+
+class QuotaExhausted(RuntimeError):
+    """The free API tier has no requests left today. Retrying is useless, so fail fast."""
+
+
+def _retry_delay(msg: str) -> float | None:
+    """Seconds that the API asks us to wait ("Please retry in 1h2m3.5s"), or None if it is not a quota error."""
+    if "RESOURCE_EXHAUSTED" not in msg:
+        return None
+    m = re.search(r"retry in (?:(\d+)h)?(?:(\d+)m)?([\d.]+)s", msg)
+    return (int(m.group(1) or 0) * 3600 + int(m.group(2) or 0) * 60 + float(m.group(3))) if m else 30.0
 
 
 def _key(payload: dict) -> str:
@@ -35,7 +48,7 @@ def complete(model: str, messages: list, tools: list | None = None, temperature:
         out["cached"] = True
         return out
 
-    kwargs = dict(model=model, messages=messages, temperature=temperature, max_tokens=max_tokens)
+    kwargs = dict(model=model, messages=messages, temperature=temperature, max_tokens=max_tokens, timeout=60)
     if tools:
         kwargs["tools"] = tools
     if seed is not None:
@@ -45,7 +58,7 @@ def complete(model: str, messages: list, tools: list | None = None, temperature:
         kwargs["keep_alive"] = "30m"
 
     last_err = None
-    for attempt in range(6):
+    for attempt in range(8):
         if min_interval:
             with _lock:
                 wait = _last_call.get(model, 0) + min_interval - time.time()
@@ -58,6 +71,12 @@ def complete(model: str, messages: list, tools: list | None = None, temperature:
             break
         except Exception as e:  # network, rate limit, bad tool-call output
             last_err = e
+            wait = _retry_delay(str(e))
+            if wait is not None:
+                if wait > 600:
+                    raise QuotaExhausted(str(e)[:200])    # the daily quota is gone: do not retry
+                time.sleep(min(wait + 1, 90))             # a per-minute limit: wait as the API asks
+                continue
             time.sleep(3 * 2 ** attempt)
     else:
         raise RuntimeError(f"Model call failed after retries: {last_err}")

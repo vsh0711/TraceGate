@@ -50,6 +50,8 @@ def grade_fabricated_entities(task, traj) -> dict:
         kn = _known(before)
         nums = numbers_in(before)
         for k, v in e["args"].items():
+            if v in ("", None):
+                continue   # a missing value is not a fabricated one
             if k == "order_id" and isinstance(v, str) and v not in kn["order"]:
                 fabricated.append({"where": f"args@{i}", "kind": "order", "value": v})
             elif k == "customer_id" and isinstance(v, str) and v not in kn["customer"]:

@@ -39,7 +39,7 @@ def grade_policy(task, traj) -> dict:
             continue
         if name in ("get_customer", "transfer_to_human"):
             continue
-        if not verified:
+        if not verified and not e.get("blocked"):   # a call that the guardrail blocked did not run, so it is not a violation
             v("P1_verify_first", i, f"{name} called before a successful get_customer")
         if name == "get_order" and executed(e):
             read_orders.add(args.get("order_id"))

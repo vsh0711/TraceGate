@@ -3,7 +3,7 @@ import os
 
 # Models (LiteLLM names). The agent runs on a local Ollama model.
 AGENT_MODEL = os.environ.get("AGENT_MODEL", "ollama_chat/llama3.2:3b")
-JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "gemini/gemini-3.8-flash")
+JUDGE_MODEL = os.environ.get("JUDGE_MODEL", "gemini/gemini-3.5-flash-lite")
 SIM_USER_MODEL = os.environ.get("SIM_USER_MODEL", AGENT_MODEL)
 
 # Agent run settings. These stay fixed for every version, so runs compare fairly.

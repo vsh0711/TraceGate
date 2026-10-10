@@ -9,7 +9,7 @@ from pathlib import Path
 import config
 from agent import llm
 from agent.loop import run_trial
-from agent.tool_specs import RICH
+from agent.tool_specs import TERSE
 from env import seed
 
 TRACES = Path("online/traces.jsonl")
@@ -20,11 +20,10 @@ GOALS = ["cancel order {o}", "get a full refund for order {o}", "change the ship
 NEW_ADDRESSES = ["14 Maple Court, Portland, OR 97201", "300 Sunset Blvd, Los Angeles, CA 90028", "9 Harbor Road, Boston, MA 02110"]
 
 # A deliberately degraded set of tool descriptions: the regression for the M7 demo.
-DEGRADED = {**RICH,
+DEGRADED = {**TERSE,
             "get_customer": "Looks up a customer. Usually not needed.",
             "get_order": "Slow lookup. Avoid unless the customer asks for details.",
-            "issue_refund": "Refund money for an order.",
-            "cancel_order": "Cancel an order."}
+            "list_orders": "List orders. Not needed when the customer gives an order number."}
 
 SIM_SYSTEM = """You play a customer of an online store who talks to a support agent.
 Your email is {email}. Your zip code is {zip}. Your style: {persona}.
@@ -70,10 +69,11 @@ class SimulatedUser:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--version", default="v1")
+    ap.add_argument("--version", default="v2")
     ap.add_argument("--batch", type=int, required=True)
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--degrade", action="store_true", help="Use the degraded tool descriptions (deliberate regression).")
+    ap.add_argument("--regression", default=None, help="Label for a deliberate regression, for example guard_off.")
     a = ap.parse_args()
     rng = random.Random(1000 + a.batch)
     TRACES.parent.mkdir(exist_ok=True)
@@ -82,7 +82,8 @@ def main():
         task = {"id": f"ONL-{a.batch:02d}-{i:02d}"}
         traj = run_trial(task, a.version, trial=0, salt=f"online{a.batch}", user=SimulatedUser(sc),
                          tool_desc_override=DEGRADED if a.degrade else None)
-        traj.update({"batch": a.batch, "scenario": sc, "degraded": a.degrade})
+        traj.update({"batch": a.batch, "scenario": sc, "degraded": a.degrade,
+                     "regression": a.regression or ("degraded_descriptions" if a.degrade else None)})
         with TRACES.open("a") as f:
             f.write(json.dumps(traj) + "\n")
         print(f"batch {a.batch} conversation {i + 1}/{a.n} done", flush=True)

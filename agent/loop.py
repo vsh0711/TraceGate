@@ -5,9 +5,10 @@ import time
 
 import config
 from agent import llm
+from agent.answer_check import check as check_answer
+from agent.guard import Guard
 from agent.tool_specs import tool_schemas
 from agent.versions import VERSIONS, system_prompt
-from env.policy import refund_block_reason
 from env.tools import Env, dumps
 
 
@@ -18,7 +19,7 @@ def stable_seed(*parts) -> int:
 def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, exemplars: str = "",
               use_cache: bool = True, model: str | None = None, tool_desc_override: dict | None = None) -> dict:
     """Run one trial of one task. Return the trajectory (a plain dict)."""
-    from agent.user import ScriptedUser
+    from agent.user import HARNESS_VERSION, ScriptedUser
     cfg = VERSIONS[version]
     model = model or config.AGENT_MODEL
     env = Env()
@@ -27,6 +28,7 @@ def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, e
     seed = stable_seed(task["id"], trial, salt)
     system = system_prompt(version, exemplars)
 
+    guard = Guard() if cfg["validator"] else None
     messages = [{"role": "system", "content": system}]
     events = []   # the logged trajectory
     totals = {"prompt_tokens": 0, "completion_tokens": 0, "latency": 0.0, "llm_calls": 0}
@@ -38,6 +40,7 @@ def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, e
 
     add_user(user.first())
     status = "max_steps"
+    rewritten = False
     for step in range(config.MAX_STEPS):
         try:
             r = llm.complete(model, messages, tools, config.TEMPERATURE, config.MAX_TOKENS, seed + step, use_cache)
@@ -62,22 +65,30 @@ def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, e
             for c in r["tool_calls"]:
                 name, args = c["name"], c["arguments"]
                 pre = env.order_context(args["order_id"]) if isinstance(args.get("order_id"), str) else None
-                blocked = None
-                if cfg["validator"] and name == "issue_refund" and pre:
-                    try:
-                        blocked = refund_block_reason(pre, float(args.get("amount", 0)))
-                    except (TypeError, ValueError):
-                        blocked = "The refund amount must be a number."
+                blocked = guard.check(name, args, pre) if guard else None
                 if blocked:
                     out = {"error": f"BLOCKED_BY_POLICY: {blocked}"}
                 else:
                     out = env.call(name, args)
+                    if guard:
+                        guard.update(name, args, out)
                 events.append({"type": "tool", "name": name, "args": args, "output": out,
                                "ok": "error" not in out, "blocked": bool(blocked), "pre": pre, "usage": usage})
                 messages.append({"role": "tool", "tool_call_id": c["id"], "content": dumps(out)})
             continue
 
         text = r["content"] or ""
+        if cfg.get("answer_check") and not rewritten:
+            problems = check_answer(events, text)
+            if problems:                      # one chance to rewrite the draft answer
+                rewritten = True
+                note = ("SYSTEM CHECK: your draft answer has problems. " + " ".join(problems) +
+                        " Rewrite the answer. State only facts that tool results or the customer gave you, and say that an action is done only if its tool call succeeded.")
+                events.append({"type": "validator", "draft": text, "problems": problems, "usage": usage})
+                messages.append({"role": "assistant", "content": text})
+                messages.append({"role": "user", "content": note})
+                continue
+        rewritten = False
         messages.append({"role": "assistant", "content": text})
         events.append({"type": "assistant", "content": text, "usage": usage, "final": False})
         nxt = user.reply(text)
@@ -91,7 +102,7 @@ def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, e
             e["final"] = True
             break
     return {"task_id": task["id"], "version": version, "trial": trial, "salt": salt, "model": model,
-            "status": status, "events": events, "final_diff": env.final_state_diff(),
+            "harness": HARNESS_VERSION, "status": status, "events": events, "final_diff": env.final_state_diff(),
             "totals": {**totals, "latency": round(totals["latency"], 3),
                        "wall": round(time.time() - t_start, 3),
                        "cost_usd": llm.cost_usd(totals["prompt_tokens"], totals["completion_tokens"])}}

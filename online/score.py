@@ -15,7 +15,7 @@ TRACES, SCORES, QUEUE = Path("online/traces.jsonl"), Path("online/scores.jsonl")
 def score(traj: dict, use_judge: bool) -> dict:
     task = {"reference_calls": [], "tags": {"expect_refusal": False}}
     tools = tool_events(traj)
-    s = {"trace_id": traj["task_id"], "batch": traj["batch"], "degraded": traj.get("degraded", False),
+    s = {"trace_id": traj["task_id"], "batch": traj["batch"], "degraded": traj.get("degraded", False), "regression": traj.get("regression"),
          "version": traj["version"]}
     s["fab_entity"] = hallucination.grade_fabricated_entities(task, traj)["fabricated"]
     s["fab_action"] = hallucination.grade_fabricated_actions(task, traj)["fabricated"]
@@ -23,6 +23,8 @@ def score(traj: dict, use_judge: bool) -> dict:
     s["policy_violation"], s["policy_rules"] = (not pol["pass"]), sorted({v["rule"] for v in pol["violations"]})
     s["tool_error"] = any((not e["ok"]) and not e.get("blocked") for e in tools)
     s["loop"] = trajectory.grade_efficiency(task, traj)["loop"]
+    s["blocked_calls"] = sum(1 for e in tools if e.get("blocked"))
+    s["hallucination_code"] = s["fab_entity"] or s["fab_action"]   # hallucination by the code checks (all traces)
     if use_judge:
         try:
             c = judge.grade_claims(task, traj)

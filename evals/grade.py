@@ -25,6 +25,7 @@ def grade_trial(task, traj, use_judge: bool) -> dict:
     g["success"] = g["state"]["pass"] and g["answer"]["pass"] and g["policy"]["pass"]
     g["totals"] = traj["totals"]
     g["status"] = traj["status"]
+    g["blocked_calls"] = sum(1 for e in traj["events"] if e["type"] == "tool" and e.get("blocked"))
     if use_judge:
         try:
             g["claims"] = judge.grade_claims(task, traj)
@@ -34,11 +35,11 @@ def grade_trial(task, traj, use_judge: bool) -> dict:
     return g
 
 
-def grade_run(run_id: str, use_judge: bool = True, workers: int = 4) -> list[dict]:
+def grade_run(run_id: str, use_judge: bool = True, workers: int = 4, judge_split: str = "holdout") -> list[dict]:
     tasks = {t["id"]: t for t in load_tasks()}
     trajs = load_trajectories(run_id)
     with ThreadPoolExecutor(max_workers=workers if use_judge else 1) as pool:
-        grades = list(pool.map(lambda tr: grade_trial(tasks[tr["task_id"]], tr, use_judge), trajs))
+        grades = list(pool.map(lambda tr: grade_trial(tasks[tr["task_id"]], tr, use_judge and judge_split in ("all", tasks[tr["task_id"]]["split"])), trajs))
     grades.sort(key=lambda g: (g["task_id"], g["trial"]))
     (run_dir(run_id) / "grades.jsonl").write_text("".join(json.dumps(g) + "\n" for g in grades))
     return grades
@@ -53,6 +54,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("run_id")
     ap.add_argument("--no-judge", action="store_true")
+    ap.add_argument("--judge-split", default="holdout", choices=["holdout", "dev", "all"],
+                    help="Which split the LLM judge grades. The free API tier allows about 500 requests a day.")
     a = ap.parse_args()
-    gs = grade_run(a.run_id, not a.no_judge)
+    gs = grade_run(a.run_id, not a.no_judge, judge_split=a.judge_split)
     print(f"graded {len(gs)} trials; success {sum(g['success'] for g in gs) / max(len(gs), 1):.1%}")
