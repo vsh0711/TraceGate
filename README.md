@@ -42,6 +42,23 @@ TraceGate does five things:
 | Hallucination rate (judge `j4`) | 47.2% | 51.4% |
 | Notional cost per success | $0.0163 | $0.0127 |
 
+**Reliability: pass^k** (k = number of trials of one task that must all succeed; the headline is k = 4, equal to the 4 trials per task):
+
+| Item | Meaning |
+|---|---|
+| n | trials per task (4) |
+| c | trials of that task that succeeded |
+| pass^k | C(c, k) / C(n, k), averaged over tasks: the chance that all k sampled trials succeed (reliability; a customer gets one attempt) |
+| pass@k | 1 - C(n - c, k) / C(n, k): the chance that at least one trial succeeds (potential) |
+
+| Holdout (18 tasks) | pass^1 | pass^2 | pass^3 | **pass^4** | pass@4 |
+|---|---|---|---|---|---|
+| v0 baseline | 34.7% | 31.5% | 29.2% | **27.8%** | 38.9% |
+| v2 guardrail (promoted) | 50.0% | 41.7% | 36.1% | **33.3%** | 61.1% |
+| v5 remediation | 63.9% | 54.6% | 48.6% | **44.4%** | 77.8% |
+
+The gap between pass@4 and pass^4 is the unreliability: v2 can do 61.1% of the holdout tasks at least once, but all 4 times only 33.3%.
+
 **Gate decisions** (rule: the gain must exceed the 14.0-point noise floor, be significant by a paired bootstrap, and no category may regress):
 
 | Candidate | Dev change (95% CI) | Holdout change (95% CI) | Decision |
