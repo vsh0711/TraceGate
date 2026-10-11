@@ -143,7 +143,7 @@ More commands are in [`docs/runbook.md`](docs/runbook.md).
 
 ## Status
 
-Done: M0 to M7, the report files, the changelog and the improvement chart. **Pending: the 2-minute video** (script in [`docs/video-script.md`](docs/video-script.md)), which the project owner records. Recommended: a second human labeler for the judge validation. See [`docs/STATUS.md`](docs/STATUS.md).
+Done: M0 to M7, the report files, the changelog and the improvement chart. **Pending: the 2-minute video** (script in [`docs/video-script.md`](docs/video-script.md)), which the project owner records. Recommended: a second human labeler for the judge validation.
 
 ## Style of the documents
 
