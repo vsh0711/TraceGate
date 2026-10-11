@@ -1,10 +1,67 @@
-# Agent evals: measure an agent's accuracy and hallucinations, and make it improve
+# TraceGate
+
+**TraceGate measures a tool-using agent's accuracy and hallucinations, and makes the agent improve from its own failures, with a gate that keeps the numbers honest.**
 
 ![Holdout success, hallucination rate, cost and failure categories for each version](docs/img/improvement.png)
 
 > I built a tool-using agent and the system that grades it: 50 tasks (plus 5 regression tasks), deterministic graders plus an LLM judge, trajectory-level scoring, and pass^k reliability. A failure → dataset → fix loop raised success on a frozen holdout from **34.7% to 50.0%** over **5 gated iterations** (1 promoted, 4 rejected), with no category regressing. **Judge agreement (prompt `j4`, held-out split, n = 73 trials): TPR 0.97, TNR 0.98, kappa = 0.94 against hand labels that were re-reviewed by Claude under the written rubric. Against my own first-pass hand labels the same judge agrees much less (kappa = 0.35). See [`docs/judge-validation.md`](docs/judge-validation.md).**
 
-This repository follows the brief `BRIEF.md` (project 02, option A). The agent is not the point. The eval system is the project.
+## Summary
+
+TraceGate is an evaluation system for a customer-support agent that handles orders, refunds and address changes over a SQLite store, and that follows a written policy. The agent is a plain loop (model call, tool calls, tool results, repeat) on a small local model. **The agent is not the point. The eval system is the project.**
+
+TraceGate does five things:
+
+1. **It defines correctness with code.** Success means the final database change is right, the answer checks pass, and none of 9 policy rules is broken. The graders also score tool choice, arguments and efficiency on the whole trajectory, not only the final answer.
+2. **It counts hallucinations.** It uses an operational definition: two deterministic checks (fabricated entities and fabricated actions) and one claim-level LLM judge.
+3. **It does not fool itself.** It measures run-to-run noise (flip rate 14.0%), uses bootstrap intervals over tasks and paired tests, keeps a hash-locked holdout, and blocks leakage in code.
+4. **It validates its judge** against labels, with TPR, TNR, kappa and bias checks, and it reports the judge's limits.
+5. **It improves the agent from its own failures.** It reads failed trajectories, names the failure modes, fixes the biggest one first, adds regression tasks, and promotes a change only if it passes a gate. Four of five changes were rejected, and each is logged with its numbers.
+
+**Evidence for every claim is in one file: [`docs/EVIDENCE.md`](docs/EVIDENCE.md)** (policy, tasks, tests, labels, judge validation, results, traces).
+
+## What this project proves
+
+- **It can define correctness** for a non-deterministic, multi-step system: final database state plus 9 policy rules, checked on every trajectory.
+- **It builds graders that it can trust, with evidence:** reference solutions pass every grader (a test), and the judge is validated (kappa 0.94 per trial on held-out labels, with the label caveat below).
+- **It does error analysis:** 137 failed trajectories read, 8 categories, and the biggest one (49 of 68 failed dev trials in one baseline run) fixed first.
+- **It does not fool itself:** noise floor 14.0%, a leak guard, and judge bias checks (reordering changed 2 of 32 verdicts, padding 3 of 20).
+- **It improves without breaking what worked:** the promoted change raised holdout success by +15.3 points (95% CI +4.2 to +27.8) and no category lost more than 10 points.
+
+## Sample scores, tests and validation
+
+**Scores (baseline against the promoted version):**
+
+| Metric (holdout, 18 tasks x 4 trials) | v0 baseline | v2 guardrail |
+|---|---|---|
+| Success (95% CI, bootstrap over tasks) | 34.7% (15.3% to 56.9%) | 50.0% (30.6% to 69.4%) |
+| pass^4 / pass@4 | 27.8% / 38.9% | 33.3% / 61.1% |
+| Policy violation rate | 43.1% | 0.0% |
+| Tool selection precision / recall | 89.3% / 74.3% | 88.1% / 81.1% |
+| Fabricated entity / action rate (code checks) | 13.9% / 5.6% | 15.3% / 2.8% |
+| Hallucination rate (judge `j4`) | 47.2% | 51.4% |
+| Notional cost per success | $0.0163 | $0.0127 |
+
+**Gate decisions** (rule: the gain must exceed the 14.0-point noise floor, be significant by a paired bootstrap, and no category may regress):
+
+| Candidate | Dev change (95% CI) | Holdout change (95% CI) | Decision |
+|---|---|---|---|
+| v2 guardrail | +20.3 (+10.9 to +31.2) | +15.3 (+4.2 to +27.8) | **promoted** |
+| v5 guardrail with remediation (8 trials per task, pooled) | +9.8 (+3.1 to +17.2) | +9.0 (+1.4 to +20.1) | rejected: significant, but below the noise floor |
+
+**Judge validation** (tuned on a dev split; run once on a held-out split; acceptance rule: kappa 0.60 or more and TPR 0.80 or more):
+
+| Judge-test, prompt `j4` | n | TPR | TNR | Cohen's kappa (final labels) | Kappa (owner's first-pass labels) |
+|---|---|---|---|---|---|
+| Hallucination, per trial | 73 | 0.97 | 0.98 | **0.94** | 0.35 |
+| Hallucination, per claim | 168 | 0.91 | 0.98 | **0.90** | 0.27 |
+| Refusal handling | 38 | 1.00 | 0.85 | **0.88** | 0.01 |
+
+The bias checks pass: reversing the claim order changed 2 of 32 verdicts, and padding the answer changed 3 of 20. **Caveat:** the "final labels" are a re-review by Claude of the owner's first-pass labels, because the first pass disagreed with the written rubric. The brief asks for labels that you make yourself. Both sets are kept and reported.
+
+**Tests:** `make test` → **29 passed in 2.29s**. They cover the task set and the frozen holdout, a check that every reference solution passes every grader, the guardrail rules, the agent loop with a fake model, the reactive scripted user, the statistics (pass^k, bootstrap, paired tests, flip rate), the answer validator, and two grader regressions. `make eval` runs all tasks once and prints the success rate (34.5% for the baseline, one trial per task).
+
+This repository follows the brief `BRIEF.md` (project 02, option A).
 
 ## The agent
 

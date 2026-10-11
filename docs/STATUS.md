@@ -14,7 +14,8 @@ Last updated: 2026-10-11 (end of day 2). Read this file first when you resume.
 | M5 failure taxonomy | Done. 137 offline and 35 online trials. Notes were written by Claude. |
 | M6 learning loop | Done: v1, v3, v4, v5 rejected, **v2 promoted**. Dataset v2 (5 dev regression tasks, embedding dedup). Improvement chart. |
 | M7 online evals | Done (`docs/online-evals.md`, `online/dashboard.html`). |
-| README with the chart | Done. |
+| README (TraceGate) with the chart, summary, sample scores, tests and validation | Done. |
+| Evidence pack for presentation | Done: `docs/EVIDENCE.md`, rebuilt by `python -m evals.evidence`. |
 | 2-minute video | **Pending. The owner records it.** Script: `docs/video-script.md`. |
 
 ## To do
