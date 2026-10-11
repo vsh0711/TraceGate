@@ -1,0 +1,42 @@
+{
+  "split": "judge-dev",
+  "model": "gemini/gemini-3.5-flash-lite",
+  "judge_version": "j1",
+  "n_trials": 77,
+  "claim_level": {
+    "tp": 7,
+    "fn": 12,
+    "tn": 104,
+    "fp": 36,
+    "n": 159,
+    "tpr": 0.3684210526315789,
+    "tnr": 0.7428571428571429,
+    "kappa": 0.07198443579766513
+  },
+  "trial_level": {
+    "tp": 7,
+    "fn": 4,
+    "tn": 40,
+    "fp": 26,
+    "n": 77,
+    "tpr": 0.6363636363636364,
+    "tnr": 0.6060606060606061,
+    "kappa": 0.13223140495867775
+  },
+  "refusal": {
+    "tp": 3,
+    "fn": 0,
+    "tn": 12,
+    "fp": 25,
+    "n": 40,
+    "tpr": 1.0,
+    "tnr": 0.32432432432432434,
+    "kappa": 0.0671641791044776
+  },
+  "bias": {
+    "position_same": 16,
+    "position_total": 16,
+    "pad_same": 8,
+    "pad_total": 10
+  }
+}

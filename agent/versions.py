@@ -14,6 +14,8 @@ VERSIONS = {
     "v3": {"note": "exemplar memory", "descriptions": tool_specs.TERSE, "validator": True, "memory": True},
     # v3 was rejected, so v4 starts from v2 and adds only the answer validator.
     "v4": {"note": "answer validator", "descriptions": tool_specs.TERSE, "validator": True, "memory": False, "answer_check": True},
+    # v3 and v4 were rejected, so v5 starts from v2 and adds only the remediation of a blocked write.
+    "v5": {"note": "guardrail with remediation", "descriptions": tool_specs.TERSE, "validator": True, "memory": False, "remediate": True},
 }
 
 

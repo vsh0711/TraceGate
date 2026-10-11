@@ -17,11 +17,11 @@ Version **v2** (guardrail). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 
 | Args: schema-valid / real entities / correct | 85.8% / 80.7% / 85.7% |
 | Efficiency: steps / reference steps; loop rate | 1.06; 0.0% |
 | Guardrail blocks per trial | 0.70 |
-| Fabricated entity rate | 13.0% |
+| Fabricated entity rate | 11.0% |
 | Fabricated action rate | 2.0% |
-| Hallucination rate (response level, judge) | 52.8% |
-| Claim-level unsupported / contradicted rate (150 claims) | 20.0% / 14.0% |
-| Refusal explained (judge, refusal tasks) | 37.5% |
+| Hallucination rate (response level, judge) | 51.4% |
+| Claim-level unsupported / contradicted rate (150 claims) | 18.0% / 16.0% |
+| Refusal explained (judge, refusal tasks) | 16.7% |
 | Notional cost per successful task | $0.0099 |
 | p95 latency per trial (model time) | 79.0 s |
 
@@ -110,11 +110,11 @@ Version **v2** (guardrail). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 
 | Args: schema-valid / real entities / correct | 86.7% / 78.1% / 81.2% |
 | Efficiency: steps / reference steps; loop rate | 1.04; 0.0% |
 | Guardrail blocks per trial | 0.82 |
-| Fabricated entity rate | 20.8% |
+| Fabricated entity rate | 15.3% |
 | Fabricated action rate | 2.8% |
-| Hallucination rate (response level, judge) | 52.8% |
-| Claim-level unsupported / contradicted rate (150 claims) | 20.0% / 14.0% |
-| Refusal explained (judge, refusal tasks) | 37.5% |
+| Hallucination rate (response level, judge) | 51.4% |
+| Claim-level unsupported / contradicted rate (150 claims) | 18.0% / 16.0% |
+| Refusal explained (judge, refusal tasks) | 16.7% |
 | Notional cost per successful task | $0.0127 |
 | p95 latency per trial (model time) | 86.9 s |
 
@@ -149,5 +149,5 @@ Version **v2** (guardrail). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 
 - Policy violations: none
 - Fabricated entities: [T016/t3](traces/T016_t3.md), [T017/t0](traces/T017_t0.md), [T017/t3](traces/T017_t3.md)
 - Fabricated actions: [T017/t3](traces/T017_t3.md), [T029/t1](traces/T029_t1.md), [T031/t0](traces/T031_t0.md)
-- Hallucinated (judge): [T003/t0](traces/T003_t0.md), [T003/t1](traces/T003_t1.md), [T003/t2](traces/T003_t2.md)
+- Hallucinated (judge): [T003/t0](traces/T003_t0.md), [T008/t2](traces/T008_t2.md), [T008/t3](traces/T008_t3.md)
 - Looped: none

@@ -27,4 +27,4 @@ CATEGORY_REGRESSION_LIMIT = 0.10   # a category may not lose more than 10 points
 
 # Judge settings. The free API tier has request limits, so calls are spaced out.
 JUDGE_MIN_INTERVAL = float(os.environ.get("JUDGE_MIN_INTERVAL", "4.0"))   # seconds between calls
-JUDGE_PROMPT_VERSION = "j1"
+JUDGE_PROMPT_VERSION = "j4"

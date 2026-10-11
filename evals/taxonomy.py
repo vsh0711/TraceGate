@@ -20,6 +20,7 @@ PRIMARY = {
     "skipped_identity_check": "Used an order tool before identity was verified, or continued after verification failed.",
     "gave_up_early": "Stopped before the job was done: narrated or asked instead of acting, or gave no answer.",
     "malformed_tool_call": "Wrote the tool call as plain text, so no tool ran, and the job was never done.",
+    "repeated_calls": "Made no wrong step first, but repeated the same call 3 or more times without progress.",
     "policy_violation": "Read the order, then still did something that the policy does not allow.",
     "misread_request": "Did a different action from the one the customer asked for.",
     "other": "A failure that matches no rule above.",
@@ -30,7 +31,7 @@ SECONDARY = {
     "hallucinated_fact": "Stated an id, amount or date that is not in the evidence (code check), or the judge found an unsupported claim.",
     "wrong_tool_args": "At least one call had invalid, unreal or placeholder arguments.",
 }
-CATEGORIES = {**PRIMARY, **SECONDARY}   # 7 primary + 4 secondary
+CATEGORIES = {**PRIMARY, **SECONDARY}   # 8 primary + 4 secondary tags (12 labels in all)
 
 
 def _placeholder(args: dict) -> bool:
@@ -66,6 +67,10 @@ def primary(g: dict, traj: dict) -> str:
             if ok:
                 read.add(args.get("order_id") or "list")
             continue
+        if name in WRITES and e.get("blocked"):
+            reason = str(e["output"].get("error", ""))
+            if args.get("order_id") in read and not any(k in reason for k in ("Read the order first", "Identity is not verified")):
+                return "policy_violation"          # it read the order and still tried something that the policy forbids
         if name in WRITES:
             oid = args.get("order_id")
             if oid not in read and not (e.get("pre") is None and "list" in read and oid):
@@ -81,6 +86,8 @@ def primary(g: dict, traj: dict) -> str:
         if rules & {"P1_verify_first"}:
             return "skipped_identity_check"
         return "policy_violation"
+    if g["efficiency"]["loop"]:
+        return "repeated_calls"
     if not g["state"]["pass"]:
         changed = traj["final_diff"]["orders"] or traj["final_diff"]["refunds"]
         return "misread_request" if changed else "gave_up_early"

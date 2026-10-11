@@ -68,6 +68,16 @@ def run_trial(task: dict, version: str, trial: int, salt: str = "", user=None, e
                 blocked = guard.check(name, args, pre) if guard else None
                 if blocked:
                     out = {"error": f"BLOCKED_BY_POLICY: {blocked}"}
+                    if cfg.get("remediate") and blocked.startswith("Read the order first") and pre is not None:
+                        # Remediation (v5): the system reads the order for the agent, logs that read as a tool event, and
+                        # returns the real order data in the error. The agent still decides what to do next.
+                        order = env.call("get_order", {"order_id": args["order_id"]})
+                        if "error" not in order:
+                            guard.update("get_order", {"order_id": args["order_id"]}, order)
+                            events.append({"type": "tool", "name": "get_order", "args": {"order_id": args["order_id"]}, "output": order,
+                                           "ok": True, "blocked": False, "auto": True, "pre": pre, "usage": usage})
+                            out = {"error": f"BLOCKED_BY_POLICY: {blocked}", "order_now_read_by_system": order,
+                                   "next_step": "Use these real values. Check the policy. Then retry, or explain to the customer why you cannot."}
                 else:
                     out = env.call(name, args)
                     if guard:

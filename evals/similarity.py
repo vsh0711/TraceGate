@@ -1,7 +1,12 @@
 """Text similarity for (1) dataset dedup and (2) exemplar retrieval.
 Uses embeddings from the model API when available, and falls back to TF-IDF cosine."""
+import hashlib
+import json
 import math
+import os
 import re
+import time
+from pathlib import Path
 from collections import Counter
 
 import numpy as np
@@ -26,14 +31,43 @@ def _tfidf(texts: list[str]) -> np.ndarray:
     return X
 
 
+EMB_CACHE = Path(".cache/emb")
+
+
+def _embed_api(texts: list[str]) -> list[list[float]]:
+    """Embed with the API. Each text is cached on disk. A per-minute rate limit is waited out, not skipped."""
+    import litellm
+    from agent.llm import _retry_delay
+    EMB_CACHE.mkdir(parents=True, exist_ok=True)
+    paths = [EMB_CACHE / (hashlib.sha256(f"{EMBED_MODEL}|{t}".encode()).hexdigest() + ".json") for t in texts]
+    missing = [i for i, p in enumerate(paths) if not p.exists()]
+    for start in range(0, len(missing), 20):
+        chunk = missing[start:start + 20]
+        for attempt in range(8):
+            try:
+                r = litellm.embedding(model=EMBED_MODEL, input=[texts[i] for i in chunk])
+                for i, d in zip(chunk, r.data):
+                    paths[i].write_text(json.dumps(d["embedding"]))
+                break
+            except Exception as e:
+                wait = _retry_delay(str(e))
+                if wait is None or wait > 600 or attempt == 7:
+                    raise
+                time.sleep(min(wait + 1, 70))
+    return [json.loads(p.read_text()) for p in paths]
+
+
 def embed(texts: list[str]) -> np.ndarray:
-    """Return L2-normalised vectors. Tries the embedding API first."""
-    try:
-        import litellm
-        r = litellm.embedding(model=EMBED_MODEL, input=texts)
-        X = np.array([d["embedding"] for d in r.data], dtype=float)
-        _backend["name"] = "embedding-api"
-    except Exception:
+    """Return L2-normalised vectors. Uses the embedding API when a key is set. It falls back to TF-IDF only when no
+    key is set or the daily quota is gone. The backend that was used is reported by backend()."""
+    X = None
+    if os.environ.get("GEMINI_API_KEY"):
+        try:
+            X = np.array(_embed_api(texts), dtype=float)
+            _backend["name"] = "embedding-api"
+        except Exception as e:
+            print(f"WARNING: embedding API failed ({str(e)[:80]}); using TF-IDF", flush=True)
+    if X is None:
         X = _tfidf(texts)
         _backend["name"] = "tfidf"
     n = np.linalg.norm(X, axis=1, keepdims=True)

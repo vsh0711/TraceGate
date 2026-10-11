@@ -1,0 +1,14 @@
+{
+  "run_id": "v4-reg",
+  "version": "v4",
+  "version_note": "answer validator",
+  "split": "all",
+  "trials": 4,
+  "salt": "a",
+  "model": "ollama_chat/llama3.2:3b",
+  "temperature": 0.5,
+  "harness": "h2",
+  "max_steps": 15,
+  "max_tokens": 512,
+  "n_tasks": 5
+}

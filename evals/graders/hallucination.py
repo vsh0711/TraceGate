@@ -15,7 +15,7 @@ RE_MONEY = re.compile(r"\$\s?(\d[\d,]*(?:\.\d+)?)")
 
 def _entities(text: str) -> dict:
     return {"order": set(RE_ORDER.findall(text)), "customer": set(RE_CUST.findall(text)),
-            "refund": set(RE_REFUND.findall(text)), "email": {e.lower() for e in RE_EMAIL.findall(text)},
+            "refund": set(RE_REFUND.findall(text)), "email": {e.lower().rstrip(".") for e in RE_EMAIL.findall(text)},   # no trailing full stop
             "date": set(RE_DATE.findall(text)),
             "money": {round(float(m.replace(",", "")), 2) for m in RE_MONEY.findall(text)}}
 

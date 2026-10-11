@@ -17,8 +17,11 @@ Version **v3** (exemplar memory). Model `ollama_chat/llama3.2:3b`, temperature 0
 | Args: schema-valid / real entities / correct | 92.8% / 89.9% / 90.8% |
 | Efficiency: steps / reference steps; loop rate | 1.14; 5.5% |
 | Guardrail blocks per trial | 0.45 |
-| Fabricated entity rate | 11.5% |
+| Fabricated entity rate | 9.0% |
 | Fabricated action rate | 4.5% |
+| Hallucination rate (response level, judge) | 68.1% |
+| Claim-level unsupported / contradicted rate (177 claims) | 16.9% / 21.5% |
+| Refusal explained (judge, refusal tasks) | 45.8% |
 | Notional cost per successful task | $0.0142 |
 | p95 latency per trial (model time) | 118.3 s |
 
@@ -107,8 +110,11 @@ Version **v3** (exemplar memory). Model `ollama_chat/llama3.2:3b`, temperature 0
 | Args: schema-valid / real entities / correct | 93.0% / 90.4% / 90.1% |
 | Efficiency: steps / reference steps; loop rate | 1.19; 12.5% |
 | Guardrail blocks per trial | 0.49 |
-| Fabricated entity rate | 19.4% |
+| Fabricated entity rate | 12.5% |
 | Fabricated action rate | 6.9% |
+| Hallucination rate (response level, judge) | 68.1% |
+| Claim-level unsupported / contradicted rate (177 claims) | 16.9% / 21.5% |
+| Refusal explained (judge, refusal tasks) | 45.8% |
 | Notional cost per successful task | $0.0174 |
 | p95 latency per trial (model time) | 122.5 s |
 
@@ -143,5 +149,5 @@ Version **v3** (exemplar memory). Model `ollama_chat/llama3.2:3b`, temperature 0
 - Policy violations: none
 - Fabricated entities: [T003/t0](traces/T003_t0.md), [T003/t1](traces/T003_t1.md), [T017/t3](traces/T017_t3.md)
 - Fabricated actions: [T013/t2](traces/T013_t2.md), [T029/t1](traces/T029_t1.md), [T029/t2](traces/T029_t2.md)
-- Hallucinated (judge): none
+- Hallucinated (judge): [T003/t0](traces/T003_t0.md), [T003/t1](traces/T003_t1.md), [T003/t2](traces/T003_t2.md)
 - Looped: [T013/t2](traces/T013_t2.md), [T014/t1](traces/T014_t1.md), [T029/t0](traces/T029_t0.md)

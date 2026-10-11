@@ -1,0 +1,276 @@
+{
+  "config": {
+    "run_id": "v5-b",
+    "version": "v5",
+    "version_note": "guardrail with remediation",
+    "split": "all",
+    "trials": 4,
+    "salt": "b",
+    "model": "ollama_chat/llama3.2:3b",
+    "temperature": 0.5,
+    "harness": "h2",
+    "max_steps": 15,
+    "max_tokens": 512,
+    "n_tasks": 50
+  },
+  "all": {
+    "n_trials": 200,
+    "n_tasks": 50,
+    "success": {
+      "rate": 0.735,
+      "lo": 0.625,
+      "hi": 0.825
+    },
+    "pass_hat": {
+      "1": 0.735,
+      "2": 0.6433333333333333,
+      "3": 0.575,
+      "4": 0.52
+    },
+    "pass_at": {
+      "1": 0.735,
+      "2": 0.8266666666666667,
+      "3": 0.85,
+      "4": 0.86
+    },
+    "by_category": {
+      "lookup": 0.35,
+      "cancel": 0.8571428571428571,
+      "refund": 0.8863636363636364,
+      "address": 0.95,
+      "multi": 0.39285714285714285,
+      "adversarial": 0.7833333333333333
+    },
+    "by_difficulty": {
+      "easy": 0.65,
+      "medium": 0.875,
+      "hard": 0.6333333333333333
+    },
+    "grader_pass": {
+      "state": 0.805,
+      "answer": 0.93,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 0.8108108108108109,
+        "recall": 0.75
+      },
+      "get_customer": {
+        "precision": 0.98,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 1.0,
+        "recall": 0.8617021276595744
+      },
+      "issue_refund": {
+        "precision": 0.5875,
+        "recall": 0.9038461538461539
+      },
+      "list_orders": {
+        "precision": 1.0,
+        "recall": 0.1875
+      },
+      "transfer_to_human": {
+        "precision": 0.0,
+        "recall": null
+      },
+      "update_address": {
+        "precision": 0.8333333333333334,
+        "recall": 1.0
+      }
+    },
+    "tool_precision": 0.9041666666666666,
+    "tool_recall": 0.8991666666666667,
+    "arg_schema_valid_rate": 0.8560490045941807,
+    "arg_entities_real_rate": 0.8070444104134763,
+    "arg_correct_rate": 0.8787878787878788,
+    "steps_ratio": 1.21,
+    "loop_rate": 0.02,
+    "blocked_calls_per_trial": 0.75,
+    "fabricated_entity_rate": 0.115,
+    "fabricated_action_rate": 0.045,
+    "n_judged": 0,
+    "cost_per_success": 0.008466496598639456,
+    "cost_per_trial": 0.006222875,
+    "p95_latency_s": 87.7357,
+    "statuses": {
+      "completed": 200
+    }
+  },
+  "dev": {
+    "n_trials": 128,
+    "n_tasks": 32,
+    "success": {
+      "rate": 0.8125,
+      "lo": 0.703125,
+      "hi": 0.90625
+    },
+    "pass_hat": {
+      "1": 0.8125,
+      "2": 0.7291666666666666,
+      "3": 0.65625,
+      "4": 0.59375
+    },
+    "pass_at": {
+      "1": 0.8125,
+      "2": 0.8958333333333334,
+      "3": 0.90625,
+      "4": 0.90625
+    },
+    "by_category": {
+      "lookup": 0.4166666666666667,
+      "cancel": 0.85,
+      "refund": 0.9285714285714286,
+      "address": 1.0,
+      "multi": 0.5625,
+      "adversarial": 0.875
+    },
+    "by_difficulty": {
+      "easy": 0.7222222222222222,
+      "medium": 0.8928571428571429,
+      "hard": 0.7777777777777778
+    },
+    "grader_pass": {
+      "state": 0.875,
+      "answer": 0.9375,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 0.6956521739130435,
+        "recall": 0.8
+      },
+      "get_customer": {
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 1.0,
+        "recall": 0.85
+      },
+      "issue_refund": {
+        "precision": 0.5098039215686274,
+        "recall": 0.9285714285714286
+      },
+      "list_orders": {
+        "precision": 1.0,
+        "recall": 0.25
+      },
+      "transfer_to_human": {
+        "precision": 0.0,
+        "recall": null
+      },
+      "update_address": {
+        "precision": 0.8888888888888888,
+        "recall": 1.0
+      }
+    },
+    "tool_precision": 0.9055989583333333,
+    "tool_recall": 0.8997395833333333,
+    "arg_schema_valid_rate": 0.8516746411483254,
+    "arg_entities_real_rate": 0.8181818181818182,
+    "arg_correct_rate": 0.9078947368421053,
+    "steps_ratio": 1.2410156250000002,
+    "loop_rate": 0.0234375,
+    "blocked_calls_per_trial": 0.765625,
+    "fabricated_entity_rate": 0.09375,
+    "fabricated_action_rate": 0.0546875,
+    "n_judged": 0,
+    "cost_per_success": 0.007619490384615384,
+    "cost_per_trial": 0.0061908359375,
+    "p95_latency_s": 87.76429999999999,
+    "statuses": {
+      "completed": 128
+    }
+  },
+  "holdout": {
+    "n_trials": 72,
+    "n_tasks": 18,
+    "success": {
+      "rate": 0.5972222222222222,
+      "lo": 0.4027777777777778,
+      "hi": 0.7642361111111091
+    },
+    "pass_hat": {
+      "1": 0.5972222222222222,
+      "2": 0.4907407407407407,
+      "3": 0.4305555555555556,
+      "4": 0.3888888888888889
+    },
+    "pass_at": {
+      "1": 0.5972222222222222,
+      "2": 0.7037037037037037,
+      "3": 0.75,
+      "4": 0.7777777777777778
+    },
+    "by_category": {
+      "lookup": 0.25,
+      "cancel": 0.875,
+      "refund": 0.8125,
+      "address": 0.875,
+      "multi": 0.16666666666666666,
+      "adversarial": 0.6
+    },
+    "by_difficulty": {
+      "easy": 0.5416666666666666,
+      "medium": 0.8333333333333334,
+      "hard": 0.4166666666666667
+    },
+    "grader_pass": {
+      "state": 0.6805555555555556,
+      "answer": 0.9166666666666666,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 1.0,
+        "recall": 0.7
+      },
+      "get_customer": {
+        "precision": 0.9444444444444444,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 1.0,
+        "recall": 0.8823529411764706
+      },
+      "issue_refund": {
+        "precision": 0.7241379310344828,
+        "recall": 0.875
+      },
+      "list_orders": {
+        "precision": null,
+        "recall": 0.0
+      },
+      "update_address": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0
+      }
+    },
+    "tool_precision": 0.9016203703703702,
+    "tool_recall": 0.8981481481481483,
+    "arg_schema_valid_rate": 0.8638297872340426,
+    "arg_entities_real_rate": 0.7872340425531915,
+    "arg_correct_rate": 0.8271028037383178,
+    "steps_ratio": 1.1548611111111111,
+    "loop_rate": 0.013888888888888888,
+    "blocked_calls_per_trial": 0.7222222222222222,
+    "fabricated_entity_rate": 0.1527777777777778,
+    "fabricated_action_rate": 0.027777777777777776,
+    "n_judged": 0,
+    "cost_per_success": 0.01051506976744186,
+    "cost_per_trial": 0.0062798333333333334,
+    "p95_latency_s": 86.49745000000001,
+    "statuses": {
+      "completed": 72
+    }
+  }
+}

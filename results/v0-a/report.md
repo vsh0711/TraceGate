@@ -17,11 +17,11 @@ Version **v0** (baseline). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 t
 | Args: schema-valid / real entities / correct | 82.0% / 77.0% / 80.7% |
 | Efficiency: steps / reference steps; loop rate | 0.99; 2.5% |
 | Guardrail blocks per trial | 0.00 |
-| Fabricated entity rate | 13.5% |
+| Fabricated entity rate | 11.5% |
 | Fabricated action rate | 3.5% |
-| Hallucination rate (response level, judge) | 44.4% |
-| Claim-level unsupported / contradicted rate (135 claims) | 16.3% / 14.8% |
-| Refusal explained (judge, refusal tasks) | 33.3% |
+| Hallucination rate (response level, judge) | 47.2% |
+| Claim-level unsupported / contradicted rate (135 claims) | 15.6% / 19.3% |
+| Refusal explained (judge, refusal tasks) | 16.7% |
 | Notional cost per successful task | $0.0127 |
 | p95 latency per trial (model time) | 73.2 s |
 
@@ -130,11 +130,11 @@ Version **v0** (baseline). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 t
 | Args: schema-valid / real entities / correct | 83.3% / 75.8% / 75.4% |
 | Efficiency: steps / reference steps; loop rate | 0.99; 2.8% |
 | Guardrail blocks per trial | 0.00 |
-| Fabricated entity rate | 19.4% |
+| Fabricated entity rate | 13.9% |
 | Fabricated action rate | 5.6% |
-| Hallucination rate (response level, judge) | 44.4% |
-| Claim-level unsupported / contradicted rate (135 claims) | 16.3% / 14.8% |
-| Refusal explained (judge, refusal tasks) | 33.3% |
+| Hallucination rate (response level, judge) | 47.2% |
+| Claim-level unsupported / contradicted rate (135 claims) | 15.6% / 19.3% |
+| Refusal explained (judge, refusal tasks) | 16.7% |
 | Notional cost per successful task | $0.0163 |
 | p95 latency per trial (model time) | 75.2 s |
 
@@ -179,5 +179,5 @@ Version **v0** (baseline). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 t
 - Policy violations: [T002/t0](traces/T002_t0.md), [T002/t3](traces/T002_t3.md), [T005/t0](traces/T005_t0.md)
 - Fabricated entities: [T009/t3](traces/T009_t3.md), [T017/t0](traces/T017_t0.md), [T017/t1](traces/T017_t1.md)
 - Fabricated actions: [T008/t1](traces/T008_t1.md), [T009/t3](traces/T009_t3.md), [T013/t2](traces/T013_t2.md)
-- Hallucinated (judge): [T003/t0](traces/T003_t0.md), [T003/t1](traces/T003_t1.md), [T003/t2](traces/T003_t2.md)
+- Hallucinated (judge): [T003/t0](traces/T003_t0.md), [T008/t0](traces/T008_t0.md), [T008/t1](traces/T008_t1.md)
 - Looped: [T018/t0](traces/T018_t0.md), [T018/t3](traces/T018_t3.md), [T024/t3](traces/T024_t3.md)

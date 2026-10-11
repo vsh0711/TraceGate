@@ -11,6 +11,19 @@ A candidate version passes the gate only if all 4 checks pass. The command is `p
 
 The report also shows the McNemar test and the pass^k change.
 
+## Gate for a fix that targets hallucination
+
+Some fixes aim at the hallucination rate, not at success. Success does not include hallucination, so the success gate cannot see their effect. For such a fix we declare the target **before** the run, and we use this gate: `python -m evals.gate <baseline_run> <candidate_run> --target-hallucination`. The candidate passes only if all 4 checks pass.
+
+| Check | Rule |
+|---|---|
+| Hallucination falls | The judged hallucination rate on the **holdout** falls, and the 95% paired-bootstrap interval of the change has an upper bound below 0. Tasks are resampled. |
+| Dev success holds | Dev success does not fall by more than the flip rate. |
+| Holdout success holds | Holdout success does not fall by more than the flip rate. |
+| No category regresses | No category loses more than 10 points on dev or on holdout. |
+
+The judge is independent from the code checks that the fix may use. For this reason the test uses the judge. The judge is not yet validated against human labels (M4), so a pass here is provisional until `docs/judge-validation.md` states the agreement.
+
 ## Why the checks differ for dev and holdout
 
 The holdout has few tasks (18). A significance test on 18 tasks has little power. For this reason the significance check uses dev, and the holdout must show a gain above noise. The report always shows the holdout interval, so you can see how wide it is.

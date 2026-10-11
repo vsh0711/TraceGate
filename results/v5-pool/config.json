@@ -1,0 +1,8 @@
+{
+  "run_id": "v5-pool",
+  "pooled_from": [
+    "v5",
+    "v5-b"
+  ],
+  "trials": 8
+}

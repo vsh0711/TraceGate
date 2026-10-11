@@ -10,7 +10,10 @@ from pathlib import Path
 import config
 from evals.graders import judge
 from evals.graders.common import final_answer
-from evals.label import LABELS
+from evals.label import LABELS as ORIGINAL_LABELS
+
+FINAL_LABELS = Path("labels/human_labels_final.jsonl")   # the original labels with the blind re-review applied
+LABELS = FINAL_LABELS if FINAL_LABELS.exists() else ORIGINAL_LABELS
 from evals.runner import load_trajectories
 from evals.tasks import load_tasks
 
@@ -33,8 +36,9 @@ def confusion(y_true, y_pred) -> dict:
             "kappa": kappa(y_true, y_pred) if y_true else None}
 
 
-def run(split: str, model: str | None, bias_n: int = 20) -> dict:
+def run(split: str, model: str | None, bias_n: int = 20) -> dict:   # bias_n: how many trials get the position and padding checks
     labels = [l for l in map(json.loads, Path(LABELS).read_text().splitlines()) if l["judge_split"] == split]
+    print(f"labels file: {LABELS} ({len(labels)} trials in {split})", flush=True)
     tasks = {t["id"]: t for t in load_tasks()}
     trajs = {}
     claim_h, claim_j, trial_h, trial_j, ref_h, ref_j = [], [], [], [], [], []
@@ -70,7 +74,14 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", default="judge-test")
     ap.add_argument("--model")
+    ap.add_argument("--bias-n", type=int, default=20, help="Trials for the position and verbosity bias checks (each costs 3 judge calls).")
+    ap.add_argument("--labels", choices=["final", "original"], default="final",
+                    help="final = the user's labels with the re-review applied; original = the user's first-pass labels.")
     a = ap.parse_args()
-    res = run(a.split, a.model)
-    Path(f"results/judge_validation_{a.split}_{config.JUDGE_PROMPT_VERSION}.json").write_text(json.dumps(res, indent=2))
+    if a.labels == "original":
+        LABELS = ORIGINAL_LABELS          # same judge answers (cached), scored against the first-pass labels
+    res = run(a.split, a.model, a.bias_n)
+    res["labels"] = a.labels
+    suffix = "" if a.labels == "final" else "_original-labels"
+    Path(f"results/judge_validation_{a.split}_{config.JUDGE_PROMPT_VERSION}{suffix}.json").write_text(json.dumps(res, indent=2))
     print(json.dumps(res, indent=2))

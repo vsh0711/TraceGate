@@ -1,9 +1,11 @@
 {
  "primary": {
   "skipped_identity_check": 8,
-  "gave_up_early": 14,
+  "gave_up_early": 9,
   "skipped_order_lookup": 22,
-  "malformed_tool_call": 1
+  "repeated_calls": 2,
+  "malformed_tool_call": 1,
+  "policy_violation": 3
  },
  "secondary": {
   "repeated_action": 2,

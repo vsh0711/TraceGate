@@ -33,12 +33,16 @@ def main(argv=None):
     ap.add_argument("--workers", type=int, default=config.WORKERS)
     ap.add_argument("--no-cache", action="store_true")
     ap.add_argument("--limit", type=int, help="Only the first N tasks (smoke test).")
+    ap.add_argument("--only-dataset-version", help="Only tasks added in this dataset version, for example v2 (the regression tasks).")
     a = ap.parse_args(argv)
 
     run_id = a.run_id or f"{a.version}-{a.split}"
     d = run_dir(run_id)
     d.mkdir(parents=True, exist_ok=True)
-    tasks = load_tasks(a.split)[: a.limit]
+    tasks = load_tasks(a.split)
+    if a.only_dataset_version:
+        tasks = [t for t in tasks if t["dataset_version"] == a.only_dataset_version]
+    tasks = tasks[: a.limit]
     cfg = {"run_id": run_id, "version": a.version, "version_note": VERSIONS[a.version]["note"], "split": a.split,
            "trials": a.trials, "salt": a.salt, "model": config.AGENT_MODEL, "temperature": config.TEMPERATURE,
            "harness": HARNESS_VERSION, "max_steps": config.MAX_STEPS, "max_tokens": config.MAX_TOKENS, "n_tasks": len(tasks)}

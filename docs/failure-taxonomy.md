@@ -52,6 +52,19 @@ Important: the notes were written by Claude, not by a human. The categories and 
 
 The tagger gives the same primary category as the manual label for 137 of 137 trials (100%). This check is in-sample: the tagger rules were written after the reading, so the number shows only that the rules reproduce the reading. It does not show that they work on new failures.
 
+## Online traces (triage of the review queue)
+
+35 flagged online traces were triaged with the same rule (`python -m evals.online_triage`). Batches 1 to 7 are version v2. Batches 8 and 9 are the deliberate regression (guardrail off, version v0).
+
+| Category | Batches 1 to 7 (v2) | Batches 8 and 9 (guardrail off) |
+|---|---|---|
+| `skipped_identity_check` | 11 | 6 |
+| `policy_violation` | 2 | 7 |
+| `skipped_order_lookup` | 4 | 4 |
+| `repeated_calls` | 1 | 0 |
+
+In the healthy batches, most flags are `skipped_identity_check`: the customer gives no identity at first, and the agent tries an order tool (the guardrail blocks it). With the guardrail off, `policy_violation` is the largest group. These online failure modes became the regression tasks of dataset v2 (`evals/new_tasks_v2.json`).
+
 ## Known limits
 
 - One coder wrote the notes, and the same coder wrote the tagger. No second coder checked them.

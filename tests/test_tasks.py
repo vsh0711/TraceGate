@@ -8,11 +8,25 @@ from evals.tasks import load_tasks
 
 def test_task_counts_and_split():
     tasks = load_tasks()
-    assert len(tasks) == 50
-    hold = [t for t in tasks if t["split"] == "holdout"]
-    assert len(hold) / len(tasks) >= 0.30
+    v1 = [t for t in tasks if t["dataset_version"] == "v1"]
+    assert len(v1) == 50                                   # the brief (M0) asks for 50 tasks
+    assert len([t for t in v1 if t["split"] == "holdout"]) / len(v1) >= 0.30
     assert {"id", "input", "expected", "tags", "split"} <= set(tasks[0])
-    assert len({t["id"] for t in tasks}) == 50
+    assert len({t["id"] for t in tasks}) == len(tasks)
+
+
+def test_new_regression_tasks_are_dev_only_and_the_holdout_is_unchanged():
+    tasks = load_tasks()                                   # load_tasks checks the holdout hash and stops on a change
+    new = [t for t in tasks if t["dataset_version"] != "v1"]
+    assert new and all(t["split"] == "dev" for t in new)
+    assert len([t for t in tasks if t["split"] == "holdout"]) == 18
+
+
+def test_dedup_rejects_a_copy_and_keeps_a_different_task():
+    from evals.similarity import is_duplicate
+    texts = [t["input"][0] for t in load_tasks()]
+    assert is_duplicate(texts[0], texts[1:] + [texts[0]])
+    assert not is_duplicate("Tell me a story about a dragon and a castle.", texts)
 
 
 def test_mix_has_adversarial_and_difficulties():

@@ -1,0 +1,21 @@
+{
+  "promote": false,
+  "checks": {
+    "dev_gain_above_noise": false,
+    "dev_gain_significant": true,
+    "holdout_gain_above_noise": false,
+    "no_category_regression": true
+  },
+  "regressions": {},
+  "dev_delta": 0.1015625,
+  "dev_ci": [
+    0.015625,
+    0.203125
+  ],
+  "holdout_delta": 0.13888888888888884,
+  "holdout_ci": [
+    0.02777777777777779,
+    0.2777777777777778
+  ],
+  "noise_floor": 0.14
+}

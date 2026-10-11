@@ -1,1 +1,1 @@
-{"v0":"baseline","v1":"tool descriptions (rejected)","v2":"guardrail","v3":"exemplar memory"}
+{"v0": "baseline", "v1": "descriptions\nrejected", "v2": "guardrail\nPROMOTED", "v3": "exemplars\nrejected", "v4": "answer check\nrejected", "v5": "remediation\nrejected (gain\nbelow noise floor)"}

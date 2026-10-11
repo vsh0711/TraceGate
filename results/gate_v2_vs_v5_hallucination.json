@@ -1,0 +1,20 @@
+{
+  "promote": true,
+  "target": "hallucination",
+  "checks": {
+    "hallucination_falls_significantly": true,
+    "dev_success_not_worse_than_noise": true,
+    "holdout_success_not_worse_than_noise": true,
+    "no_category_regression": true
+  },
+  "regressions": {},
+  "hallucination_a": 0.5138888888888888,
+  "hallucination_b": 0.3611111111111111,
+  "hallucination_delta": -0.15277777777777773,
+  "hallucination_ci": [
+    -0.3055555555555556,
+    -0.02777777777777779
+  ],
+  "n_tasks": 18,
+  "noise_floor": 0.14
+}

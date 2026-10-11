@@ -1,41 +1,39 @@
 # Project status and how to resume
 
-Last updated: 2026-10-10 (end of day 1). Read this file first when you resume.
+Last updated: 2026-10-11 (end of day 2). Read this file first when you resume.
 
 ## Done
 
 | Milestone | State |
 |---|---|
-| M0 agent and 50 tasks (32 dev, 18 frozen holdout) | Done. Holdout hash lock in `evals/holdout.lock`. |
+| M0 agent and 50 tasks (32 dev, 18 frozen holdout) | Done. Hash lock in `evals/holdout.lock`. `make eval` runs all tasks once (34.5% success). |
 | M1 runner, logs, noise floor | Done. Flip rate 14.0% (`results/noise.md`). Harness h2 (`docs/harness.md`). |
 | M2 layered graders | Done. Code, trajectory (9 policy rules), judge. |
-| M3 hallucination detection | Code checks done on all runs. Judge done on the **holdout** for v0-a and v2 only (quota). |
-| M4 judge validation | **Not done.** Needs your hand labels. Queue ready (150 trials, claims pre-extracted). |
-| M5 failure taxonomy | Done. `docs/failure-taxonomy.md` (137 trials, written by Claude, not a human). |
-| M6 learning loop | v1 rejected, v2 PROMOTED, v3 rejected (`CHANGELOG.md`). v4 is built but not run. |
+| M3 hallucination detection | Done. Code checks on all runs. Judge `j4` on the holdout of v0, v1, v2, v3, v4 and v5. |
+| M4 judge validation | Done, with a caveat. `docs/judge-validation.md`. The final labels are Claude's re-review of the owner's hand labels. |
+| M5 failure taxonomy | Done. 137 offline and 35 online trials. Notes were written by Claude. |
+| M6 learning loop | Done: v1, v3, v4, v5 rejected, **v2 promoted**. Dataset v2 (5 dev regression tasks, embedding dedup). Improvement chart. |
 | M7 online evals | Done (`docs/online-evals.md`, `online/dashboard.html`). |
+| README with the chart | Done. |
+| 2-minute video | **Pending. The owner records it.** Script: `docs/video-script.md`. |
 
-Headline so far: holdout success 34.7% to 50.0% (v0 to v2, gate passed). Judged hallucination on the holdout went up (44.4% to 52.8%). That is why v4 exists.
+## To do
 
-## To do next (in this order)
-
-1. **v4 (answer validator).** Run `PYTHONPATH=. .venv/bin/python -m evals.runner --version v4 --trials 4 --salt a --run-id v4 --workers 2` (about 45 minutes). Then `python -m evals.grade v4 --no-judge`, `python -m evals.report v4`, `python -m evals.diff v2 v4`, `python -m evals.gate v2 v4`. Add a `CHANGELOG.md` entry whatever the result.
-2. **Judge the holdout** of v1, v3 and v4 (`grade_run(run, True, workers=2, judge_split="holdout")`, see "Judge quota" below). The chart needs the judged hallucination rate for every version.
-3. **Chart and README.** `python -m evals.chart v0=v0-a v1=v1 v2=v2 v3=v3 v4=v4 --out docs/img/improvement.png`. Then write `README.md` with the chart on top, and the one-sentence claim from the brief with real numbers.
-4. **M4 (you).** `python -m evals.label annotate` (resume at any time). Then `python -m evals.judge_validation` for `judge-dev`, then `judge-test`. Then write `docs/judge-validation.md` (agreement table, confusion matrix, bias checks). The README must state TPR, TNR, kappa and n.
-5. **Video.** You record it. The script is `docs/video-script.md`.
-6. Optional: ask a human to review a sample of `labels/failure_notes.jsonl`. Judge the online traces on a sample. Stretch goals in the brief.
+1. **Record the video** (`docs/video-script.md`).
+2. Recommended: a **second human labeler** for the judge validation. The owner's first-pass labels and the re-review disagree strongly (`docs/judge-validation.md`). A human decision on the rubric would settle which reading is right.
+3. Optional: a human review of a sample of `labels/failure_notes.jsonl`. The stretch goals in the brief.
 
 ## Judge quota and keys
 
-- The judge is `gemini/gemini-3.5-flash-lite` (fixed). The free tier allows about 500 requests per day for each model. Quota is per Google project, so a second key from the same project does not help.
-- Judge calls are cached on disk (`.cache/llm/`). A repeated call costs nothing. Judging the holdout of one run costs about 150 requests.
-- Keys are **not stored** in any file. Pass the key inline: `GEMINI_API_KEY=... PYTHONPATH=. .venv/bin/python ...`. You must give it again tomorrow.
-- Both keys that were pasted in the chat are in the chat history. Rotate them when the project is done.
+- The judge is `gemini/gemini-3.5-flash-lite`, prompt version `j4` (fixed). The free tier allows about 500 requests per day for each model **for each Google project**. A key from a new project has its own quota.
+- Judge calls are cached on disk (`.cache/llm/`). Judging the holdout of one run costs about 100 requests.
+- Keys are **not stored** in any file. Pass the key inline: `GEMINI_API_KEY=... PYTHONPATH=. .venv/bin/python ...`.
+- Several keys were pasted in the chat. They are in the chat history. **Rotate them.**
 
 ## Rules to keep
 
 - Never read holdout traces to make a fix. Never edit holdout tasks.
-- The agent model is `ollama_chat/llama3.2:3b`. Keep the Mac awake for long runs (`caffeinate -i ...`). A run takes about 45 minutes.
+- The agent model is `ollama_chat/llama3.2:3b`. Keep the Mac awake for long runs (`caffeinate -i ...`). A 200-trial run takes about 45 to 60 minutes.
 - Do not compare h1 results (`results/_archive_harness_h1/`) with h2 results.
+- Gates use dataset v1 only (the 50 original tasks). The 5 dataset v2 tasks are a separate regression suite (`results/<version>-reg`).
 - Write documents in short, plain sentences (`docs/STYLE.md`).

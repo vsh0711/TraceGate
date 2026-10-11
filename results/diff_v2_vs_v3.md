@@ -26,7 +26,7 @@ Noise floor (flip rate of identical runs): 14.0%
 - pass^4 change: +11.1 pts (CI +0.0 to +27.8)
 - McNemar (per-task majority): only A passes 1, only B passes 2, p = 1.000
 - Change is NOT above the noise floor
-- Hallucination rate (judge): nan% -> nan%
+- Hallucination rate (judge): 51.4% -> 68.1%
 - Cost per success (notional): $0.0127 -> $0.0174
 
 | Category | A | B | Change |
@@ -44,7 +44,7 @@ Noise floor (flip rate of identical runs): 14.0%
 - pass^4 change: +6.0 pts (CI -4.0 to +16.0)
 - McNemar (per-task majority): only A passes 5, only B passes 5, p = 1.000
 - Change is NOT above the noise floor
-- Hallucination rate (judge): nan% -> nan%
+- Hallucination rate (judge): 51.4% -> 68.1%
 - Cost per success (notional): $0.0099 -> $0.0142
 
 | Category | A | B | Change |

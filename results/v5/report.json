@@ -1,0 +1,290 @@
+{
+  "config": {
+    "run_id": "v5",
+    "version": "v5",
+    "version_note": "guardrail with remediation",
+    "split": "all",
+    "trials": 4,
+    "salt": "a",
+    "model": "ollama_chat/llama3.2:3b",
+    "temperature": 0.5,
+    "harness": "h2",
+    "max_steps": 15,
+    "max_tokens": 512,
+    "n_tasks": 55
+  },
+  "all": {
+    "n_trials": 200,
+    "n_tasks": 50,
+    "success": {
+      "rate": 0.725,
+      "lo": 0.62,
+      "hi": 0.815
+    },
+    "pass_hat": {
+      "1": 0.725,
+      "2": 0.6233333333333333,
+      "3": 0.57,
+      "4": 0.54
+    },
+    "pass_at": {
+      "1": 0.725,
+      "2": 0.8266666666666667,
+      "3": 0.875,
+      "4": 0.9
+    },
+    "by_category": {
+      "lookup": 0.35,
+      "cancel": 0.8928571428571429,
+      "refund": 0.9090909090909091,
+      "address": 0.85,
+      "multi": 0.42857142857142855,
+      "adversarial": 0.7333333333333333
+    },
+    "by_difficulty": {
+      "easy": 0.65,
+      "medium": 0.875,
+      "hard": 0.6
+    },
+    "grader_pass": {
+      "state": 0.79,
+      "answer": 0.935,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 0.8857142857142857,
+        "recall": 0.775
+      },
+      "get_customer": {
+        "precision": 0.98,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 0.9934640522875817,
+        "recall": 0.8085106382978723
+      },
+      "issue_refund": {
+        "precision": 0.6567164179104478,
+        "recall": 0.8461538461538461
+      },
+      "list_orders": {
+        "precision": 1.0,
+        "recall": 0.1875
+      },
+      "transfer_to_human": {
+        "precision": 0.0,
+        "recall": null
+      },
+      "update_address": {
+        "precision": 0.9,
+        "recall": 0.9
+      }
+    },
+    "tool_precision": 0.9230833333333333,
+    "tool_recall": 0.8683333333333334,
+    "arg_schema_valid_rate": 0.8575899843505478,
+    "arg_entities_real_rate": 0.812206572769953,
+    "arg_correct_rate": 0.868020304568528,
+    "steps_ratio": 1.1744166666666667,
+    "loop_rate": 0.0,
+    "blocked_calls_per_trial": 0.705,
+    "fabricated_entity_rate": 0.105,
+    "fabricated_action_rate": 0.03,
+    "n_judged": 72,
+    "hallucination_rate": 0.3611111111111111,
+    "claim_unsupported_rate": 0.0658682634730539,
+    "claim_contradicted_rate": 0.1437125748502994,
+    "n_claims": 167,
+    "refusal_explained_rate": 0.16666666666666666,
+    "cost_per_success": 0.008623027586206897,
+    "cost_per_trial": 0.006251695000000001,
+    "p95_latency_s": 89.46114999999998,
+    "statuses": {
+      "completed": 200
+    }
+  },
+  "dev": {
+    "n_trials": 128,
+    "n_tasks": 32,
+    "success": {
+      "rate": 0.7734375,
+      "lo": 0.6640625,
+      "hi": 0.875
+    },
+    "pass_hat": {
+      "1": 0.7734375,
+      "2": 0.6666666666666667,
+      "3": 0.6171875,
+      "4": 0.59375
+    },
+    "pass_at": {
+      "1": 0.7734375,
+      "2": 0.8802083333333334,
+      "3": 0.9375,
+      "4": 0.96875
+    },
+    "by_category": {
+      "lookup": 0.4166666666666667,
+      "cancel": 0.85,
+      "refund": 0.9285714285714286,
+      "address": 0.75,
+      "multi": 0.5625,
+      "adversarial": 0.825
+    },
+    "by_difficulty": {
+      "easy": 0.6388888888888888,
+      "medium": 0.8928571428571429,
+      "hard": 0.7222222222222222
+    },
+    "grader_pass": {
+      "state": 0.828125,
+      "answer": 0.9453125,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 0.8095238095238095,
+        "recall": 0.85
+      },
+      "get_customer": {
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 0.9897959183673469,
+        "recall": 0.8083333333333333
+      },
+      "issue_refund": {
+        "precision": 0.631578947368421,
+        "recall": 0.8571428571428571
+      },
+      "list_orders": {
+        "precision": 1.0,
+        "recall": 0.25
+      },
+      "transfer_to_human": {
+        "precision": 0.0,
+        "recall": null
+      },
+      "update_address": {
+        "precision": 0.9333333333333333,
+        "recall": 0.875
+      }
+    },
+    "tool_precision": 0.9364583333333333,
+    "tool_recall": 0.875,
+    "arg_schema_valid_rate": 0.8564231738035264,
+    "arg_entities_real_rate": 0.8287153652392947,
+    "arg_correct_rate": 0.8870967741935484,
+    "steps_ratio": 1.1729166666666666,
+    "loop_rate": 0.0,
+    "blocked_calls_per_trial": 0.6484375,
+    "fabricated_entity_rate": 0.0859375,
+    "fabricated_action_rate": 0.015625,
+    "n_judged": 0,
+    "cost_per_success": 0.007782737373737374,
+    "cost_per_trial": 0.0060194609375,
+    "p95_latency_s": 84.74409999999999,
+    "statuses": {
+      "completed": 128
+    }
+  },
+  "holdout": {
+    "n_trials": 72,
+    "n_tasks": 18,
+    "success": {
+      "rate": 0.6388888888888888,
+      "lo": 0.4444444444444444,
+      "hi": 0.8194444444444444
+    },
+    "pass_hat": {
+      "1": 0.6388888888888888,
+      "2": 0.5462962962962963,
+      "3": 0.4861111111111111,
+      "4": 0.4444444444444444
+    },
+    "pass_at": {
+      "1": 0.6388888888888888,
+      "2": 0.7314814814814815,
+      "3": 0.7638888888888888,
+      "4": 0.7777777777777778
+    },
+    "by_category": {
+      "lookup": 0.25,
+      "cancel": 1.0,
+      "refund": 0.875,
+      "address": 1.0,
+      "multi": 0.25,
+      "adversarial": 0.55
+    },
+    "by_difficulty": {
+      "easy": 0.6666666666666666,
+      "medium": 0.8333333333333334,
+      "hard": 0.4166666666666667
+    },
+    "grader_pass": {
+      "state": 0.7222222222222222,
+      "answer": 0.9166666666666666,
+      "policy": 1.0
+    },
+    "policy_violation_rate": 0.0,
+    "policy_violations_by_rule": {},
+    "tool_pr": {
+      "cancel_order": {
+        "precision": 1.0,
+        "recall": 0.7
+      },
+      "get_customer": {
+        "precision": 0.9444444444444444,
+        "recall": 1.0
+      },
+      "get_order": {
+        "precision": 1.0,
+        "recall": 0.8088235294117647
+      },
+      "issue_refund": {
+        "precision": 0.6896551724137931,
+        "recall": 0.8333333333333334
+      },
+      "list_orders": {
+        "precision": null,
+        "recall": 0.0
+      },
+      "transfer_to_human": {
+        "precision": 0.0,
+        "recall": null
+      },
+      "update_address": {
+        "precision": 0.8,
+        "recall": 1.0
+      }
+    },
+    "tool_precision": 0.8993055555555556,
+    "tool_recall": 0.8564814814814815,
+    "arg_schema_valid_rate": 0.859504132231405,
+    "arg_entities_real_rate": 0.7851239669421488,
+    "arg_correct_rate": 0.8356164383561644,
+    "steps_ratio": 1.1770833333333333,
+    "loop_rate": 0.0,
+    "blocked_calls_per_trial": 0.8055555555555556,
+    "fabricated_entity_rate": 0.1388888888888889,
+    "fabricated_action_rate": 0.05555555555555555,
+    "n_judged": 72,
+    "hallucination_rate": 0.3611111111111111,
+    "claim_unsupported_rate": 0.0658682634730539,
+    "claim_contradicted_rate": 0.1437125748502994,
+    "n_claims": 167,
+    "refusal_explained_rate": 0.16666666666666666,
+    "cost_per_success": 0.010431478260869565,
+    "cost_per_trial": 0.0066645555555555555,
+    "p95_latency_s": 96.05205000000002,
+    "statuses": {
+      "completed": 72
+    }
+  }
+}

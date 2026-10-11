@@ -1,0 +1,65 @@
+{"run": "v0-b", "task_id": "T038", "trial": 1, "judge_split": "judge-dev", "n_claims": 0, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T033", "trial": 2, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T033", "trial": 3, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T031", "trial": 1, "judge_split": "judge-test", "n_claims": 1, "has_refusal": false, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v2", "task_id": "T033", "trial": 3, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:action_without_cancel_order", "claim:judge_disagrees"]}
+{"run": "v2", "task_id": "T044", "trial": 2, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T012", "trial": 0, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T049", "trial": 1, "judge_split": "judge-dev", "n_claims": 4, "has_refusal": false, "reasons": ["claim:invented_detail", "claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T028", "trial": 1, "judge_split": "judge-test", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:database_changed"]}
+{"run": "v0-b", "task_id": "T012", "trial": 0, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:invented_detail", "claim:judge_disagrees", "refusal:database_changed", "refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T030", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T014", "trial": 0, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:invented_detail", "claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T041", "trial": 1, "judge_split": "judge-test", "n_claims": 2, "has_refusal": true, "reasons": ["claim:action_without_issue_refund"]}
+{"run": "v0-b", "task_id": "T050", "trial": 1, "judge_split": "judge-test", "n_claims": 5, "has_refusal": true, "reasons": ["claim:invented_detail"]}
+{"run": "v0-a", "task_id": "T034", "trial": 0, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T023", "trial": 2, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T031", "trial": 2, "judge_split": "judge-test", "n_claims": 5, "has_refusal": false, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v2", "task_id": "T042", "trial": 3, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T039", "trial": 1, "judge_split": "judge-test", "n_claims": 3, "has_refusal": true, "reasons": ["refusal:database_changed"]}
+{"run": "v0-a", "task_id": "T033", "trial": 0, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:action_without_issue_refund", "claim:judge_disagrees"]}
+{"run": "v2", "task_id": "T020", "trial": 0, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T044", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T015", "trial": 0, "judge_split": "judge-test", "n_claims": 3, "has_refusal": false, "reasons": ["claim:invented_detail"]}
+{"run": "v0-a", "task_id": "T036", "trial": 0, "judge_split": "judge-dev", "n_claims": 5, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T050", "trial": 1, "judge_split": "judge-test", "n_claims": 2, "has_refusal": true, "reasons": ["refusal:database_changed"]}
+{"run": "v0-a", "task_id": "T046", "trial": 3, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T014", "trial": 0, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:action_without_issue_refund", "claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T022", "trial": 2, "judge_split": "judge-dev", "n_claims": 6, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T012", "trial": 3, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T030", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T023", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["refusal:database_changed", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T023", "trial": 2, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T042", "trial": 3, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T014", "trial": 3, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": false, "reasons": ["claim:invented_detail", "claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T028", "trial": 2, "judge_split": "judge-test", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:database_changed"]}
+{"run": "v0-b", "task_id": "T022", "trial": 0, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T020", "trial": 1, "judge_split": "judge-dev", "n_claims": 5, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T015", "trial": 3, "judge_split": "judge-test", "n_claims": 3, "has_refusal": false, "reasons": ["claim:invented_detail"]}
+{"run": "v2", "task_id": "T010", "trial": 3, "judge_split": "judge-test", "n_claims": 2, "has_refusal": true, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v0-a", "task_id": "T010", "trial": 3, "judge_split": "judge-test", "n_claims": 2, "has_refusal": true, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v0-a", "task_id": "T038", "trial": 0, "judge_split": "judge-dev", "n_claims": 0, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T012", "trial": 0, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T010", "trial": 0, "judge_split": "judge-test", "n_claims": 2, "has_refusal": true, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v0-b", "task_id": "T038", "trial": 3, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T042", "trial": 1, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T036", "trial": 1, "judge_split": "judge-dev", "n_claims": 4, "has_refusal": false, "reasons": ["claim:invented_detail", "claim:judge_disagrees"]}
+{"run": "v2", "task_id": "T007", "trial": 2, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T039", "trial": 0, "judge_split": "judge-test", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:database_changed"]}
+{"run": "v2", "task_id": "T012", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T020", "trial": 0, "judge_split": "judge-dev", "n_claims": 6, "has_refusal": true, "reasons": ["claim:action_without_issue_refund", "refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T031", "trial": 2, "judge_split": "judge-test", "n_claims": 3, "has_refusal": false, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v2", "task_id": "T020", "trial": 2, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T004", "trial": 1, "judge_split": "judge-dev", "n_claims": 6, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v2", "task_id": "T007", "trial": 1, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": false, "reasons": ["claim:action_without_cancel_order", "claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T012", "trial": 1, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T042", "trial": 3, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T018", "trial": 3, "judge_split": "judge-test", "n_claims": 3, "has_refusal": false, "reasons": ["claim:invented_detail"]}
+{"run": "v2", "task_id": "T017", "trial": 0, "judge_split": "judge-dev", "n_claims": 4, "has_refusal": false, "reasons": ["claim:invented_detail", "claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T023", "trial": 1, "judge_split": "judge-dev", "n_claims": 2, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v2", "task_id": "T036", "trial": 0, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": false, "reasons": ["claim:action_without_cancel_order"]}
+{"run": "v0-b", "task_id": "T012", "trial": 3, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": true, "reasons": ["claim:judge_disagrees", "refusal:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T042", "trial": 2, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": true, "reasons": ["refusal:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T033", "trial": 0, "judge_split": "judge-dev", "n_claims": 6, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-b", "task_id": "T017", "trial": 0, "judge_split": "judge-dev", "n_claims": 1, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}
+{"run": "v0-a", "task_id": "T014", "trial": 1, "judge_split": "judge-dev", "n_claims": 3, "has_refusal": false, "reasons": ["claim:judge_disagrees"]}

@@ -47,7 +47,9 @@ def main(runs: list[str]):
             sec = secondary(g, t)
             rows.append({"run": run, "task_id": g["task_id"], "trial": g["trial"], "category": manual[key],
                          "tagger": primary(g, t), "secondary": sec, "note": note_for(manual[key], g, t, sec), "coder": "claude (manual reading)"})
-    Path("labels/failure_notes.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    notes_path = Path("labels/failure_notes.jsonl")
+    online = [l for l in notes_path.read_text().splitlines() if '"source": "online"' in l] if notes_path.exists() else []
+    notes_path.write_text("".join(json.dumps(r) + "\n" for r in rows) + "".join(l + "\n" for l in online))   # keep the online notes
 
     n = len(rows)
     cnt = Counter(r["category"] for r in rows)
@@ -85,6 +87,15 @@ def main(runs: list[str]):
           "This check is in-sample: the tagger rules were written after the reading, so the number shows only that the rules reproduce the reading. It does not show that they work on new failures.", ""]
     if conf:
         L += ["| Manual label | Tagger label | Trials |", "|---|---|---|"] + [f"| `{a}` | `{b}` | {v} |" for (a, b), v in conf.most_common()] + [""]
+    on = [json.loads(l) for l in online]
+    if on:
+        healthy = Counter(r["category"] for r in on if int(r["run"].split("-b")[1]) <= 7)
+        regress = Counter(r["category"] for r in on if int(r["run"].split("-b")[1]) >= 8)
+        L += ["## Online traces (triage of the review queue)", "",
+              f"{len(on)} flagged online traces were triaged with the same rule (`python -m evals.online_triage`). Batches 1 to 7 are version v2. Batches 8 and 9 are the deliberate regression (guardrail off, version v0).", "",
+              "| Category | Batches 1 to 7 (v2) | Batches 8 and 9 (guardrail off) |", "|---|---|---|"]
+        L += [f"| `{c}` | {healthy.get(c, 0)} | {regress.get(c, 0)} |" for c in sorted(set(healthy) | set(regress), key=lambda c: -(healthy.get(c, 0) + regress.get(c, 0)))]
+        L += ["", "In the healthy batches, most flags are `skipped_identity_check`: the customer gives no identity at first, and the agent tries an order tool (the guardrail blocks it). With the guardrail off, `policy_violation` is the largest group. These online failure modes became the regression tasks of dataset v2 (`evals/new_tasks_v2.json`).", ""]
     L += ["## Known limits", "",
           "- One coder wrote the notes, and the same coder wrote the tagger. No second coder checked them.",
           "- Most failures (about three quarters) are one category. A finer split inside it may help later, for example 'wrote before lookup' versus 'guessed an argument'.",

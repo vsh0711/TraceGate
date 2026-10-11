@@ -17,10 +17,11 @@ def grow(spec_path: str, threshold: float = 0.95) -> str:
     specs = json.loads(Path(spec_path).read_text())
     tasks = load_tasks()
     version = f"v{max(int(t['dataset_version'][1:]) for t in tasks) + 1}"
-    texts = [t["input"][0] for t in tasks]
+    texts = [" || ".join(t["input"]) for t in tasks]   # the whole scripted conversation, not only the first message
     added, dropped = [], []
     for s in specs:
-        if similarity.is_duplicate(s["first_message"], texts, threshold):
+        full = " || ".join([s["first_message"]] + s["script_tail"])
+        if similarity.is_duplicate(full, texts, threshold):
             dropped.append(s["first_message"])
             continue
         env = Env()
@@ -33,7 +34,7 @@ def grow(spec_path: str, threshold: float = 0.95) -> str:
                       "tags": {"category": s["category"], "difficulty": s["difficulty"], "sub": s.get("sub"),
                                "expect_refusal": s["refusal"], "source_failure": s.get("source_failure")},
                       "split": "dev", "dataset_version": version})
-        texts.append(s["first_message"])
+        texts.append(full)
     if added:
         all_tasks = tasks + added
         TASKS_PATH.write_text("".join(json.dumps(t) + "\n" for t in all_tasks))
@@ -46,5 +47,23 @@ def grow(spec_path: str, threshold: float = 0.95) -> str:
     return version
 
 
+def check_duplicates(version: str = "v2", threshold: float = 0.95) -> list[dict]:
+    """Compare every task of `version` with all tasks of earlier versions. Needs the embedding API for a real check."""
+    import numpy as np
+    tasks = load_tasks()
+    new = [t for t in tasks if t["dataset_version"] == version]
+    old = [t for t in tasks if t["dataset_version"] != version]
+    X = similarity.embed([" || ".join(t["input"]) for t in old + new])   # the whole scripted conversation
+    rows = []
+    for i, t in enumerate(new):
+        sims = X[len(old):][i] @ X[: len(old)].T
+        j = int(np.argmax(sims))
+        rows.append({"task": t["id"], "closest": old[j]["id"], "similarity": round(float(sims[j]), 3), "duplicate": bool(sims[j] >= threshold)})
+    print(f"similarity backend: {similarity.backend()}; threshold {threshold}")
+    for r in rows:
+        print(f"  {r['task']} closest to {r['closest']}: {r['similarity']}  {'DUPLICATE' if r['duplicate'] else 'ok'}")
+    return rows
+
+
 if __name__ == "__main__":
-    grow(sys.argv[1])
+    check_duplicates() if sys.argv[1] == "--check" else grow(sys.argv[1])

@@ -17,7 +17,7 @@ Version **v0** (baseline). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 t
 | Args: schema-valid / real entities / correct | 80.8% / 75.3% / 81.1% |
 | Efficiency: steps / reference steps; loop rate | 1.00; 4.5% |
 | Guardrail blocks per trial | 0.00 |
-| Fabricated entity rate | 13.5% |
+| Fabricated entity rate | 11.5% |
 | Fabricated action rate | 4.0% |
 | Notional cost per successful task | $0.0124 |
 | p95 latency per trial (model time) | 89.9 s |
@@ -129,7 +129,7 @@ Version **v0** (baseline). Model `ollama_chat/llama3.2:3b`, temperature 0.5, 4 t
 | Args: schema-valid / real entities / correct | 81.6% / 74.6% / 77.7% |
 | Efficiency: steps / reference steps; loop rate | 1.00; 6.9% |
 | Guardrail blocks per trial | 0.00 |
-| Fabricated entity rate | 20.8% |
+| Fabricated entity rate | 15.3% |
 | Fabricated action rate | 5.6% |
 | Notional cost per successful task | $0.0139 |
 | p95 latency per trial (model time) | 88.7 s |
