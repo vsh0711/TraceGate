@@ -61,6 +61,26 @@ The bias checks pass: reversing the claim order changed 2 of 32 verdicts, and pa
 
 **Tests:** `make test` → **29 passed in 2.29s**. They cover the task set and the frozen holdout, a check that every reference solution passes every grader, the guardrail rules, the agent loop with a fake model, the reactive scripted user, the statistics (pass^k, bootstrap, paired tests, flip rate), the answer validator, and two grader regressions. `make eval` runs all tasks once and prints the success rate (34.5% for the baseline, one trial per task).
 
+### Screenshots of the labeling and judging scripts
+
+These four images are terminal-style renders of the **real output** of the scripts. The script text is not edited. They are not screen captures. The labeling prompts wait for input, so no typed answer is shown.
+
+**1. Hand-labeling tool (first pass).** `python -m evals.label annotate` shows one trial: the customer request, the tool calls with their results (the evidence), and the agent's final answer. Then it asks for one label for each atomic claim: `s` supported, `c` contradicted, `u` unsupported. The first claim here is "Order O1001 was delivered 26 days ago", and the evidence shows an 11-day-old delivery.
+
+![Hand-labeling tool](docs/img/screenshots/01-human-labeling.png)
+
+**2. Blind re-review tool (second pass).** `python -m evals.label_review annotate` shows the same kind of screen for the 65 trials that were selected for a second look. It does not show the judge's answer or the earlier label. It prints the rubric reminders (invented details are `u`, an action claim needs a successful tool call) and the three-part refusal rule. Trial 1 has no claims because the final answer is a broken tool call, so only the refusal question is asked.
+
+![Blind re-review tool](docs/img/screenshots/02-human-rereview.png)
+
+**3. Judge validation run.** `python -m evals.judge_validation --split judge-test` compares the judge (prompt `j4`, model `gemini-3.5-flash-lite`) with the final labels on the 73 held-out trials. It prints the confusion counts (TP, FN, TN, FP), TPR, TNR and Cohen's kappa at claim level (kappa 0.90), trial level (0.94) and refusal level (0.88), and the bias counts: the verdict stayed the same for 30 of 32 claims when their order was reversed, and for 17 of 20 answers after padding.
+
+![Judge validation run](docs/img/screenshots/03-judge-validation-run.png)
+
+**4. Claim-level hallucination judge on one trial.** For one baseline holdout trial, the judge splits the final answer into 3 atomic claims, labels each one against the evidence (1 supported, 2 unsupported), and gives a short reason. The trial counts as a hallucination trial because at least one claim is unsupported.
+
+![Claim-level hallucination judge](docs/img/screenshots/04-judge-claim-labels.png)
+
 This repository follows the brief `BRIEF.md` (project 02, option A).
 
 ## The agent
