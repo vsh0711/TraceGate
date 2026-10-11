@@ -105,6 +105,21 @@ Frozen holdout: 18 tasks, 4 trials for each task (72 trials). The noise floor is
 - **Hallucination did not fall with success.** After v2, the judged hallucination rate on the holdout went from 47.2% to 51.4% (not a significant change). The guardrail makes the agent safe. It does not make the agent more truthful. v5 has the lowest rate (36.1%, a significant fall against v2, but hallucination was not its declared target, so this is a hint). v3 is the worst (68.1%).
 - **Four of five iterations failed the gate.** Every one is logged with its numbers and what we learned in [`CHANGELOG.md`](CHANGELOG.md).
 
+## Scale of the work
+
+**2,375 offline agent trials and 90 online simulated conversations: 2,465 in total.** Each trial is one full multi-step conversation (about 4 to 10 model calls on the local model). The counts are read from `results/*/trajectories.jsonl` and `online/traces.jsonl`.
+
+| Group | Trials |
+|---|---|
+| Original 50 tasks, final harness h2: v0 twice (400), v1 (200), v2 twice (400), v3 (200), v4 (200), v5 twice (400) | 1,800 |
+| Regression suite (5 new tasks, all 6 versions, 20 each) | 120 |
+| `make eval` (all 55 tasks once) | 55 |
+| First baseline with the old harness h1 (archived; not compared with h2) | 400 |
+| **Offline total** | **2,375** |
+| Online simulated conversations (9 batches of 10) | 90 |
+
+The 1,800 trials on the original tasks (50 tasks x 4 trials = 200 per run, 9 runs) are the ones behind the results, the gates and the chart. The judge validation used 150 of those trials: 77 for tuning and 73 held out. Judge calls are counted separately (several thousand, mostly served from the cache).
+
 ## Failure analysis
 
 We read 137 failed dev trajectories and grouped them by their **first wrong step** ([`docs/failure-taxonomy.md`](docs/failure-taxonomy.md)). The biggest category in the baseline is `skipped_order_lookup` (77%): the agent changes an order that it has not read. That is the failure that v2 removes. The taxonomy also covers 35 flagged online traces.
